@@ -16,3 +16,4 @@ documents/
 *.pem
 *.pfx
 workspace-backup/
+tatus --short

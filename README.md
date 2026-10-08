@@ -1,6 +1,7 @@
-# Intelligent Document Assistant
+# Grounded Document Assistant
 
-A PDF learning assistant with local RAG retrieval and opt-in Groq explanations.
+A RAG learning assistant with local PDF retrieval, optional Groq-powered explanations,
+source citations, Docker deployment, and automated tests.
 Search works offline; Groq tutoring needs internet and your own API key. An optional
 local excerpt mode remains available without a cloud account. No Azure subscription is used.
 
