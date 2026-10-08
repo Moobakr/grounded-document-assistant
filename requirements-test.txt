@@ -1,0 +1,2 @@
+# Tests inject embedding providers and HTTP transports; no model downloads or torch.
+-r requirements-runtime.txt

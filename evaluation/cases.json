@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "purpose": "Source-labelled development regression cases. Used during implementation; not a held-out benchmark.",
+  "cases": [
+    {
+      "id": "course_contents",
+      "question": "What topics are listed under Course Contents?",
+      "answerable": true,
+      "relevant_pages": [
+        {"source": "Lecture 1_Advanced Methods_DataAnalysis.pdf", "page": 2},
+        {"source": "Lecture 2_Advanced Methods_DataAnalysis.pdf", "page": 2},
+        {"source": "Lecture 4_Advanced Methods_DataAnalysis.pdf", "page": 2}
+      ],
+      "required_patterns": ["Linear Regression", "Logistic Regression", "Clustering", "Time Series", "Text Analysis"],
+      "rubric": "Return the actual syllabus list, not unrelated lecture details."
+    },
+    {
+      "id": "regression_category",
+      "question": "What regression methods are covered in the syllabus?",
+      "answerable": true,
+      "relevant_pages": [
+        {"source": "Lecture 1_Advanced Methods_DataAnalysis.pdf", "page": 2},
+        {"source": "Lecture 2_Advanced Methods_DataAnalysis.pdf", "page": 2},
+        {"source": "Lecture 4_Advanced Methods_DataAnalysis.pdf", "page": 2}
+      ],
+      "required_patterns": ["Linear Regression", "Logistic Regression"],
+      "forbidden_patterns": ["Principal Components", "Clustering", "Bootstrap", "Time Series", "Text Analysis"],
+      "rubric": "Select items explicitly labelled regression. Do not classify the whole syllabus as regression methods."
+    },
+    {
+      "id": "correlation_definition",
+      "question": "What does correlation mean?",
+      "answerable": true,
+      "relevant_pages": [{"source": "Lecture 1_Advanced Methods_DataAnalysis.pdf", "page": 3}],
+      "required_patterns": ["association|related|relationship"],
+      "rubric": "Explain the association or relationship between two variables."
+    },
+    {
+      "id": "python_tutorial_topics",
+      "question": "What tasks are listed in the Python tutorial content?",
+      "answerable": true,
+      "relevant_pages": [{"source": "Lecture 2_Advanced Methods_DataAnalysis.pdf", "page": 4}],
+      "required_patterns": ["Reading Data", "Plotting", "statistics"],
+      "rubric": "Include reading/manipulating data, plotting, and statistics."
+    },
+    {
+      "id": "collection_initial_step",
+      "question": "What is the initial step in the data analytics pipeline?",
+      "answerable": true,
+      "relevant_pages": [{"source": "Lecture 3_Preprocessing_AdvancedMethod.pdf", "page": 2}],
+      "required_patterns": ["data collection|data collectionis"],
+      "rubric": "Identify data collection as the initial step."
+    },
+    {
+      "id": "provenance_purpose",
+      "question": "Why is data provenance important?",
+      "answerable": true,
+      "relevant_pages": [{"source": "Lecture 3_Preprocessing_AdvancedMethod.pdf", "page": 2}],
+      "required_patterns": ["origin", "transformations"],
+      "rubric": "State that provenance tracks data origin and transformations."
+    },
+    {
+      "id": "collection_ethics",
+      "question": "Which ethical considerations are mentioned for data collection?",
+      "answerable": true,
+      "relevant_pages": [{"source": "Lecture 3_Preprocessing_AdvancedMethod.pdf", "page": 2}],
+      "required_patterns": ["privacy", "consent"],
+      "rubric": "Identify privacy and consent without inventing additional policies."
+    },
+    {
+      "id": "time_series_definition",
+      "question": "What is a time series?",
+      "answerable": true,
+      "relevant_pages": [
+        {"source": "Lecture 8_Advanced Methods_DataAnalysis.pdf", "page": 2},
+        {"source": "Lecture 8_Advanced Methods_DataAnalysis.pdf", "page": 3}
+      ],
+      "required_patterns": ["sequentially|regular intervals|fixed interval"],
+      "rubric": "Define observations recorded sequentially or at regular intervals."
+    },
+    {
+      "id": "missing_personal_fact",
+      "question": "What is the lecturer's favorite color?",
+      "answerable": false,
+      "rubric": "Abstain: the lectures provide no evidence of this personal preference."
+    },
+    {
+      "id": "missing_evaluation_result",
+      "question": "What exact test accuracy did my own trained model achieve?",
+      "answerable": false,
+      "rubric": "Abstain: lecture examples are not results from the user's own model."
+    },
+    {
+      "id": "missing_future_event",
+      "question": "On what exact date will the next exam take place?",
+      "answerable": false,
+      "rubric": "Abstain: the provided lecture corpus does not establish the next exam date."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+services:
+  model-setup:
+    image: document-assistant:local
+    build: .
+    profiles: [setup]
+    command: [python, -m, src.cli, prepare, --revision, 1110a243fdf4706b3f48f1d95db1a4f5529b4d41]
+    volumes:
+      - embedding-model:/app/models/embeddings
+    cpus: 2
+    mem_limit: 1g
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+
+  app:
+    image: document-assistant:local
+    build: .
+    ports:
+      - "127.0.0.1:${ASSISTANT_PORT:-8766}:8765"
+    volumes:
+      - assistant-data:/app/data
+      - embedding-model:/app/models/embeddings:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=268435456,mode=1777
+    cpus: 2
+    mem_limit: 4g
+    memswap_limit: 4g
+    pids_limit: 128
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    init: true
+
+volumes:
+  assistant-data:
+  embedding-model:

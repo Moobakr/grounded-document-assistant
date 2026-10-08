@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#145a47">
+  <title>Document Assistant</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/vendor/lucide.min.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="/" aria-label="Document Assistant home"><span class="brand-mark"><i data-lucide="layers"></i></span><span>Document<br>Assistant</span></a>
+      <div class="workspace-name"><span class="workspace-avatar">LW</span><span>Local workspace<small>Personal collection</small></span><i data-lucide="chevrons-up-down"></i></div>
+      <nav aria-label="Workspace navigation">
+        <button class="nav-item active" id="nav-library"><i data-lucide="library"></i>Documents<span id="nav-count" class="nav-count">0</span></button>
+        <button class="nav-item" id="nav-workspace"><i data-lucide="messages-square"></i>Workspace</button>
+      </nav>
+      <div class="sidebar-heading">COLLECTION <span id="collection-count"></span></div>
+      <div id="collection-list" class="collection-list"></div>
+      <div class="sidebar-heading history-heading">RECENT QUESTIONS</div>
+      <div id="history-list" class="history-list"><span class="muted history-empty">No questions yet</span></div>
+      <div class="sidebar-footer"><i data-lucide="hard-drive"></i><span>Local retrieval<small>Groq answers &middot; cloud</small></span><span class="status-dot"></span></div>
+    </aside>
+    <button id="drawer-scrim" class="drawer-scrim" aria-label="Close navigation" hidden></button>
+    <main>
+      <header class="topbar">
+        <div class="topbar-leading"><button class="icon-button mobile-menu" id="menu-button" title="Toggle navigation" aria-label="Toggle navigation"><i data-lucide="panel-left"></i></button><div class="breadcrumb">LOCAL WORKSPACE <span>/</span> <span id="breadcrumb-view">DOCUMENTS</span></div></div>
+        <div class="topbar-actions"><button id="ai-settings" class="icon-button" title="AI settings" aria-label="AI settings"><i data-lucide="settings-2"></i></button><button id="upload-button" class="primary-button"><i data-lucide="upload"></i><span>Upload PDFs</span></button></div>
+      </header>
+      <div class="page-heading"><div><div class="eyebrow" id="page-eyebrow">YOUR KNOWLEDGE, ORGANIZED</div><h1 id="page-title">Document library</h1></div><div class="model-indicator"><span class="model-dot" id="model-dot"></span><span id="model-label">Model status</span><button id="refresh-model" class="icon-button small" title="Refresh model status" aria-label="Refresh model status"><i data-lucide="refresh-cw"></i></button></div></div>
+      <div id="operation-banner" class="operation-banner" role="status" hidden><span class="spinner"></span><span id="operation-label"></span></div>
+      <div class="content-grid">
+        <section class="primary-pane">
+          <section id="library-view">
+            <div class="summary-strip"><div><span class="summary-label">Documents</span><strong id="document-total">0</strong></div><div><span class="summary-label">Indexed passages</span><strong id="passage-total">0</strong></div><div><span class="summary-label">Storage</span><strong class="storage-value"><i data-lucide="hard-drive"></i>On this device</strong></div></div>
+            <div class="section-title"><h2>All documents</h2><span class="small muted" id="visible-count"></span></div>
+            <div class="library-controls"><label class="filter-field"><i data-lucide="search"></i><input id="document-filter" type="search" placeholder="Filename" aria-label="Filter documents by filename"></label><label class="sort-field"><span>Sort</span><select id="document-sort" aria-label="Sort documents"><option value="name">Name</option><option value="newest">Newest</option><option value="passages">Passages</option></select></label></div>
+            <div class="document-table-wrap"><table class="document-table"><thead><tr><th>Document</th><th class="passages-column">Passages</th><th class="date-column">Added</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="document-rows"></tbody></table></div>
+            <div id="library-empty" class="empty-state" hidden><i data-lucide="files"></i><h3>No documents</h3></div>
+            <button class="upload-zone" id="upload-zone"><span class="upload-zone-icon"><i data-lucide="file-plus-2"></i></span><span><strong>Add documents</strong><small>PDF &middot; 25 MB maximum</small></span><i data-lucide="plus"></i></button>
+            <div id="upload-results" class="upload-results" aria-live="polite"></div>
+          </section>
+          <section id="workspace-view" hidden>
+            <div class="query-controls"><div class="segmented" role="group" aria-label="Query mode"><button class="selected" id="mode-search" aria-pressed="true"><i data-lucide="search"></i>Search</button><button id="mode-answer" aria-pressed="false"><i data-lucide="sparkles"></i>Assistant</button></div><button id="clear-query" class="icon-button" title="New conversation" aria-label="New conversation"><i data-lucide="square-pen"></i></button></div>
+            <div id="assistant-controls" class="assistant-controls" hidden><label>Provider<select id="ai-provider"><option value="groq">Groq (cloud)</option><option value="local">Local excerpts</option></select></label><label>Learning mode<select id="learning-task"><option value="explain">Explain simply</option><option value="answer">Answer</option><option value="summary">Summarize topic</option><option value="quiz">Practice questions</option></select></label><span id="conversation-count" class="small muted"></span></div>
+            <p id="cloud-notice" class="cloud-notice" hidden>Cloud processing: your question, retrieved passages, and recent conversation are sent to Groq.</p>
+            <form id="query-form" class="query-form"><label for="question">Question</label><textarea id="question" rows="3" maxlength="2000" placeholder="What does correlation mean?" required></textarea><div class="query-form-footer"><label class="scope-field"><i data-lucide="folder-search"></i><select id="document-scope" aria-label="Document scope"><option value="">All documents</option></select></label><button id="run-query" class="primary-button"><i data-lucide="arrow-up-right"></i><span>Search</span></button></div></form>
+            <div class="retrieval-settings"><label for="top-k">Passages</label><input id="top-k" type="range" min="1" max="5" value="3"><output id="top-k-value" for="top-k">3</output><span class="small muted" id="query-timing"></span></div>
+            <div id="query-error" class="inline-error" role="alert" hidden></div>
+            <div id="workspace-empty" class="workspace-empty"><div class="empty-heading"><i data-lucide="scan-search"></i><h2>Explore your collection</h2></div><div class="question-presets"><button data-question="What does correlation mean?"><span>What does correlation mean?</span><i data-lucide="arrow-up-right"></i></button><button data-question="Why is data provenance important?"><span>Why is data provenance important?</span><i data-lucide="arrow-up-right"></i></button><button data-question="What is a time series?"><span>What is a time series?</span><i data-lucide="arrow-up-right"></i></button></div></div>
+            <div id="query-results" hidden><section id="answer-section" class="answer-section" hidden><div class="section-title"><h2 id="answer-title">Explanation</h2><span id="answer-provider" class="small muted">Groq</span></div><div id="answer-content"></div><button id="follow-up" class="secondary-button"><i data-lucide="message-circle"></i>Ask a follow-up</button></section><div class="section-title"><h2>Retrieved passages <span id="result-count" class="count-label"></span></h2><div><button id="copy-results" class="icon-button" title="Copy answer and passages" aria-label="Copy answer and passages"><i data-lucide="copy"></i></button><button id="download-results" class="icon-button" title="Download results" aria-label="Download results"><i data-lucide="download"></i></button></div></div><div id="source-list" class="source-list"></div></div>
+          </section>
+        </section>
+        <aside class="inspector" id="inspector"><div class="inspector-header"><h2 id="inspector-title">Document preview</h2><i data-lucide="panel-right"></i></div><div id="inspector-empty" class="inspector-empty"><i data-lucide="file-search"></i><span>No document selected</span></div><div id="inspector-content" hidden><div class="document-identity"><span class="pdf-badge">PDF</span><div><h3 id="preview-name"></h3><span class="small muted" id="preview-metadata"></span></div></div><div class="preview-frame"><img id="preview-image" alt="Selected PDF page" hidden><div id="preview-fallback" class="preview-fallback">Preview unavailable</div></div><div class="preview-controls"><span class="small">Page</span><input id="preview-page" type="number" min="1" max="300" value="1" aria-label="Preview page number"><span id="page-total" class="small muted"></span><div class="page-arrows"><button id="previous-page" class="icon-button small" title="Previous page" aria-label="Previous page"><i data-lucide="chevron-left"></i></button><button id="next-page" class="icon-button small" title="Next page" aria-label="Next page"><i data-lucide="chevron-right"></i></button></div></div><a id="open-pdf" class="secondary-button full-width" target="_blank" rel="noopener"><i data-lucide="external-link"></i>Open PDF</a><div class="inspector-divider"></div><div class="passage-heading"><h3 id="passage-title">Document details</h3><span id="passage-score" class="small muted"></span></div><p id="passage-text" class="passage-text"></p><button id="search-document" class="secondary-button full-width"><i data-lucide="search"></i>Search this document</button></div></aside>
+      </div>
+      <footer class="page-footer"><span>DOCUMENT ASSISTANT</span><span id="footer-count">Local collection</span><span>Local search &middot; optional cloud AI</span></footer>
+    </main>
+  </div>
+  <input id="file-input" type="file" accept=".pdf,application/pdf" multiple hidden>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="ai-dialog"><form id="ai-form"><div class="dialog-icon"><i data-lucide="key-round"></i></div><h2>Groq connection</h2><p id="connection-status" class="muted"></p><label class="settings-field" for="groq-key">API key<input id="groq-key" type="password" autocomplete="off" spellcheck="false" maxlength="512" required></label><label class="settings-field" for="groq-model">Model<select id="groq-model"><option value="openai/gpt-oss-120b">GPT-OSS 120B</option><option value="openai/gpt-oss-20b">GPT-OSS 20B</option></select></label><p class="muted">Cloud processing sends questions, selected passages, and recent conversation to Groq. The key stays in server memory until disconnect or restart. Usage is subject to your Groq plan and limits.</p><p id="ai-error" class="inline-error" role="alert" hidden></p><div class="dialog-actions"><button id="disconnect-ai" class="icon-button danger" type="button" title="Disconnect Groq" aria-label="Disconnect Groq"><i data-lucide="unplug"></i></button><button id="cancel-ai" class="secondary-button" type="button">Cancel</button><button id="connect-ai" class="primary-button" type="submit"><i data-lucide="plug"></i>Connect</button></div></form></dialog>
+  <dialog id="delete-dialog"><form method="dialog"><div class="dialog-icon"><i data-lucide="trash-2"></i></div><h2>Delete document?</h2><p id="delete-name"></p><p class="muted">Indexed passages and the uploaded copy will be removed. Original files in the documents folder remain.</p><div class="dialog-actions"><button class="secondary-button" value="cancel">Cancel</button><button id="confirm-delete" class="danger-button" value="delete"><i data-lucide="trash-2"></i>Delete</button></div></form></dialog>
+</body>
+</html>
